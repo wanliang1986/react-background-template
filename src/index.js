@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{Suspense} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -8,13 +8,16 @@ import store from './store/index';
 import { Provider } from 'react-redux';
 import {persistor} from './store/index'
 import {PersistGate} from 'redux-persist/lib/integration/react';
+import './iconfonts/iconfont.css'
 ReactDOM.render(
   <Provider store={store}>
       {/* PersistGate数据持久化组件，保证redux中保存的数据在页面刷新后不会出现丢失现象；
           The PersistGate data persistence component ensures that data stored in Redux will not be lost after a page refresh
        */}
       <PersistGate loading={null} persistor={persistor}>
-        <App />
+        {/* <Suspense> */}
+          <App />
+        {/* </Suspense> */}
       </PersistGate>
     </Provider>,
   document.getElementById('root')

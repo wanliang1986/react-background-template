@@ -9,9 +9,10 @@ import styles from '../../css/home.module.css'
 
 
 import { ConfigProvider } from 'antd';
-import enUS from 'antd/lib/locale/en_US';
-import zhCN from 'antd/lib/locale/zh_CN';
+// import enUS from 'antd/lib/locale/en_US';
+// import zhCN from 'antd/lib/locale/zh_CN';
 
+import i18n from '../../i18n'
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -25,6 +26,10 @@ const AsyncPage1 = lazy(() =>
 const AsyncPage2 = lazy(() =>
     import('../Page2/index')
 );
+
+const AsyncTable = lazy(()=>
+    import('../Table/table')
+)
 const {SubMenu}  = Menu
 const { Header, Sider, Content } = Layout;
 
@@ -34,7 +39,7 @@ class Home extends Component {
         this.state = {
             collapsed: false,
             visible: false,
-            locale: enUS
+            locale: ""
         }
     }
 
@@ -50,13 +55,13 @@ class Home extends Component {
         this.props.history.push('/')
     }
     changeLocal=(locale)=>{
-        this.setState({ locale: locale });
+        i18n.changeLanguage(locale)
     }
     render() {
         const {locale} = this.state
         return (
             <div>
-                <ConfigProvider locale={locale}>
+                {/* <ConfigProvider locale={locale}> */}
                     <Layout className={styles.layoutHeight}  key={locale ? locale.locale : 'en'}>
                         <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
                             <div className={styles.logo} />
@@ -64,10 +69,6 @@ class Home extends Component {
                         </Sider>
                         <Layout className="site-layout">
                             <Header style={{ padding: 0, backgroundColor: 'white' }}>
-                                {/* {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                                className: styles.trigger,
-                                onClick: this.toggle,
-                            })} */}
                                 <Row>
                                     <Col span={2}>
                                         <div onClick={this.toggle}>
@@ -81,8 +82,8 @@ class Home extends Component {
                                                 <>
                                                     <Menu>
                                                         <SubMenu key="sub1"  title="Language">
-                                                            <Menu.Item key="zhCN" onClick={()=>{this.changeLocal(zhCN)}}>中文</Menu.Item>
-                                                            <Menu.Item key="enUS" onClick={()=>{this.changeLocal(enUS)}}>English</Menu.Item>
+                                                            <Menu.Item key="zhCN" onClick={()=>{this.changeLocal('zh-cn')}}>中文</Menu.Item>
+                                                            <Menu.Item key="enUS" onClick={()=>{this.changeLocal('en')}}>English</Menu.Item>
                                                         </SubMenu>
                                                     </Menu>
                                                     <Button type="link" onClick={this.logoOut}>Login out</Button>
@@ -105,10 +106,6 @@ class Home extends Component {
                                     minHeight: 280,
                                 }}
                             >
-                                {/* <BrowserRouter> */}
-                                {/*Suspense 通过懒加载加载组件时，可能会产生渲染不及时的情况，避免这种情况，用过此组件进行交互优化
-                                    Avoid the situation where a lazy load of a component can cause untimely rendering and use this component for interactive optimization
-                                */}
                                 <Suspense fallback={<PageLoading />}>
                                     <Switch>
                                         <Route
@@ -121,16 +118,20 @@ class Home extends Component {
                                             path="/home/page2"
                                             component={AsyncPage2}
                                         />
+                                        <Route
+                                            exact
+                                            path="/home/table"
+                                            component={AsyncTable}
+                                        />
                                     </Switch>
                                 </Suspense>
-                                {/* </BrowserRouter> */}
                             </Content>
                         </Layout>
                     </Layout>
-                </ConfigProvider>
+                {/* </ConfigProvider> */}
             </div>
         );
     }
 }
 
-export default Home;
+export default Home
